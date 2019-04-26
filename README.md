@@ -25,7 +25,7 @@ E_{n}(x)=(x+n)\mod {26}.
 ```
 D_{n}(x)=(x-n)\mod {26}.
 ```
-+ Implementasikan Rumus yang didapat ke dalam kodinganD_{n}(x)=(x-n)\mod {26}.
++ Implementasikan Rumus yang didapat ke dalam kodingan
 + Jangan lupa tambahkan fungsi dekripsi di readdir untuk mendekripsi nama file sesuai perintah yang ada di soal.
 
 ## No 2
