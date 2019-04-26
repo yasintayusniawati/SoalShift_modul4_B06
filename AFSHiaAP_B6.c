@@ -8,9 +8,7 @@
 #include <errno.h>
 #include <sys/time.h>
 
-//NO 1
-
-static const char *dirpath = "/home/yasinta/shift4";
+static const char *dirpath = "/home/bima/shift4";
 
 void enkripsi(char* kata)
 {
@@ -62,7 +60,6 @@ static int xmp_getattr(const char *path, struct stat *stbuf)
 static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 		       off_t offset, struct fuse_file_info *fi)
 {
-	///
 	char fpath[1000];
 
     char sementara[1000];
@@ -71,7 +68,6 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
     enkripsi(sementara);
 
 	sprintf(fpath, "%s%s",dirpath,sementara);
-	///
 	int res = 0;
 
 	DIR *dp;
@@ -90,9 +86,7 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 		st.st_ino = de->d_ino;
 		st.st_mode = de->d_type << 12;
         char file[1000];
-		///
 		if(strcmp(de->d_name,".")!=0 && strcmp(de->d_name,"..")!=0) dekripsi(de->d_name);
-		///
         strcpy(file,de->d_name);
 		res = (filler(buf, file, &st, 0));
 			if(res!=0) break;
@@ -105,7 +99,6 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
 		    struct fuse_file_info *fi)
 {
-	//
   	char fpath[1000];
 	char sementara[1000];
     sprintf(sementara,"%s",path);
@@ -113,9 +106,12 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
     enkripsi(sementara);
 
 	sprintf(fpath, "%s%s",dirpath,sementara);
-	//
 	int res = 0;
 	int fd = 0 ;
+
+    //char file[1000];
+	//sprintf(file, "%s.bak", fpath);
+	//rename(fpath,file);
     
 	(void) fi;
 	fd = open(fpath, O_RDONLY);
@@ -142,8 +138,13 @@ static int xmp_mkdir(const char *path, mode_t mode)
 
 	sprintf(fpath, "%s%s",dirpath,sementara);
     ///
+	if(strstr(fpath, "/@ZA>AXio/") != NULL)
+	{
+		res = mkdir(fpath, 0750);	
+	}
+	else
+		res = mkdir(fpath, mode);
 
-	res = mkdir(fpath, mode);
 	if (res == -1)
 		return -errno;
 
@@ -307,8 +308,27 @@ static int xmp_chmod(const char *path, mode_t mode)
 
 	sprintf(fpath, "%s%s",dirpath,sementara);
     //
+	if(strstr(fpath, "/@ZA>AXio/") != NULL)
+	{
+		size_t ext1 = strlen(fpath), ext2 = strlen("`[S%");
+		if(ext1 >= ext2 && !strcmp(fpath + ext1 - ext2, "`[S%"))
+		{
+			pid_t child_id;
 
-	res = chmod(fpath, mode);
+			child_id = fork();
+			if(child_id == 0)
+			{
+				char *argv[] = {"zenity", "--warning", "--text='File ekstensi iz1 tidak boleh diubah permissionnya.'", NULL};
+				execv("/usr/bin/zenity", argv);
+
+			}
+			return 0;
+		}
+		else
+			res = chmod(fpath, mode);
+	}
+	else 
+		res = chmod(fpath, mode);
 	if (res == -1)
 		return -errno;
 
@@ -385,26 +405,37 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
 
 static int xmp_create(const char* path, mode_t mode, struct fuse_file_info* fi) {
 
-    (void) fi;
+	(void) fi;
 
-    int res;
-    //
-    char fpath[1000];
+	int res;
+	//
+	char fpath[1000];
 	char sementara[1000];
-    sprintf(sementara,"%s",path);
+	sprintf(sementara,"%s",path);
 
-    enkripsi(sementara);
+	enkripsi(sementara);
 
 	sprintf(fpath, "%s%s",dirpath,sementara);
-    //
+	//
 
-    res = creat(fpath, mode);
-    if(res == -1)
+	if(strstr(fpath, "/@ZA>AXio/") != NULL)
+	{
+		res = creat(fpath, 0640);
+	} 
+	else
+		res = creat(fpath, mode);
+	if(res == -1)
 	return -errno;
+	
+	if(strstr(fpath, "/@ZA>AXio/") != NULL)
+	{
+		strcpy(sementara, fpath);
+		strcat(sementara, "`[S%");
+		rename(fpath, sementara);
+	}
+	close(res);
 
-    close(res);
-
-    return 0;
+	return 0;
 }
 
 static struct fuse_operations xmp_oper = {
@@ -431,6 +462,3 @@ int main(int argc, char *argv[])
 	return fuse_main(argc, argv, &xmp_oper, NULL);
 }
 
-// NO 2
-
-// NO 3
