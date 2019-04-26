@@ -64,7 +64,7 @@ Untuk soal no 3 yang mengalami perubahan adalah fungsi readdir
 <li> Tidak dapat dibaca
 </ol>
 + Gunakan struck stat untuk mendapatkan informasi mengenai nama file, group id, dll 
-+ Simpan hasil struck statnya pada **fileniris.txt**
++ Simpan hasil struck statnya pada *filemiris.txt*
 + Jika file bahaya memiliki spesifikasi sesuai dengan soal, maka file tersebut akan terhapus
 
 ## No 4
