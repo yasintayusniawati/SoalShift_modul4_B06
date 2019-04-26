@@ -4,7 +4,7 @@
 1. Yasinta Yusniawati   05111740000054
 2. Bima Satria Ramadhan 05111740000081
 
-# SOAL
+## SOAL
 
 ## No 1
 Semua nama file dan folder harus terenkripsi. Enkripsi yang Atta inginkan sangat sederhana, yaitu Caesar cipher. Namun, Kusuma mengatakan enkripsi tersebut sangat mudah dipecahkan. Dia menyarankan untuk character list diekspansi,tidak hanya alfabet, dan diacak. Berikut character list yang dipakai:
