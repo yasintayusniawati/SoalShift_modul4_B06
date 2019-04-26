@@ -16,3 +16,13 @@ Misalkan ada file bernama “halo” di dalam folder “INI_FOLDER”, dan key y
 Perhatian: Karakter ‘/’ adalah karakter ilegal dalam penamaan file atau folder dalam *NIX, maka dari itu dapat diabaikan
 
 ### Jawaban :
++ Untuk membuat enkripsi Caesar chipher buatlah terlebih dahulu fungsi enkripsi dan dekripsinya
++ Enkripsi jika dinotasikan dalam rumus matematika adalah sebagai berikut :
+```
+E_{n}(x)=(x+n)\mod {26}.
+```
++ Dekripsi jika dinotasikan dalam rumus matematika adalah sebagai berikut :
+```
+D_{n}(x)=(x-n)\mod {26}.
+```
++ Implementasikan Rumus yang didapat ke dalam kodingan
