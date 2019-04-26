@@ -58,11 +58,11 @@ Jika ditemukan file dengan spesifikasi tersebut ketika membuka direktori, Atta a
 Untuk soal no 3 yang mengalami perubahan adalah fungsi readdir
 + Berikan sintak tambahan pada fungsi readdir yang telah di buat pada soal no 1
 + Lakukan pengecekan terhadap spesifikasi soal yang diminta, yaitu :
-<ol type="a">
-<li> Owner Name : ‘chipset’ atau ‘ic_controller’
-<li> Group Name	: ‘rusak’
-<li> Tidak dapat dibaca
-</ol>
+
+Owner Name : ‘chipset’ atau ‘ic_controller’
+Group Name	: ‘rusak’
+Tidak dapat dibaca
+
 + Gunakan struck stat untuk mendapatkan informasi mengenai nama file, group id, dll 
 + Simpan hasil struck statnya pada *filemiris.txt*
 + Jika file bahaya memiliki spesifikasi sesuai dengan soal, maka file tersebut akan terhapus
