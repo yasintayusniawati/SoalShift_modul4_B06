@@ -7,8 +7,6 @@
 #include <dirent.h>
 #include <errno.h>
 #include <sys/time.h>
-#include <grp.h>
-#include <pwd.h>
 
 static const char *dirpath = "/home/bima/shift4";
 
@@ -62,8 +60,6 @@ static int xmp_getattr(const char *path, struct stat *stbuf)
 static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 		       off_t offset, struct fuse_file_info *fi)
 {
-
-	///
 	char fpath[1000];
 
     char sementara[1000];
@@ -72,7 +68,6 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
     enkripsi(sementara);
 
 	sprintf(fpath, "%s%s",dirpath,sementara);
-	///
 	int res = 0;
 
 	DIR *dp;
@@ -86,66 +81,20 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 		return -errno;
 
 	while ((de = readdir(dp)) != NULL) {
-		struct stat info;
-        char cek[10000];
-        strcpy(cek,fpath);
-        strcat(cek,de->d_name);
-
+		struct stat st;
+		memset(&st, 0, sizeof(st));
+		st.st_ino = de->d_ino;
+		st.st_mode = de->d_type << 12;
         char file[1000];
-		///
 		if(strcmp(de->d_name,".")!=0 && strcmp(de->d_name,"..")!=0) dekripsi(de->d_name);
-		///
-
-        stat(cek,&info);
-
-        
-        struct passwd *user;
-        user = getpwuid(info.st_uid);
-        struct group *grup;
-        grup = getgrgid(info.st_gid);
-        if( (strcmp(user->pw_name,"chipset") == 0 || strcmp(user->pw_name,"ic_controller") == 0) && strcmp(grup->gr_name,"rusak") == 0){
-          if((info.st_mode & R_OK)==0){
-              char txt[10000] = "/filemiris.txt";
-              enkripsi(txt);
-              char pathtxt[100000];
-              sprintf(pathtxt,"%s%s",dirpath,txt);
-
-              FILE *filetxt;
-              filetxt = fopen(pathtxt,"a+");
-
-              char waktu[21];
-			  time_t now = time(NULL);
-			  strftime(waktu, 20, "%H:%M:%S %Y-%m-%d", localtime(&now));
-			  char isi[1000];
-              strcpy(isi,de->d_name);
-              strcat(isi,"_");
-              char iduser[1000];
-              sprintf(iduser,"%d_%d",user->pw_uid,grup->gr_gid);
-              strcat(isi,iduser);
-              strcat(isi,"_");
-              strcat(isi,waktu);
-
-              fprintf(filetxt,"%s\n",isi);
-              fclose(filetxt);
-              remove(cek);
-          }
-        }
-        else{
-            struct stat st;
-		    memset(&st, 0, sizeof(st));
-		    st.st_ino = de->d_ino;
-		    st.st_mode = de->d_type << 12;
-
-            strcpy(file,de->d_name);
-		    res = (filler(buf, file, &st, 0));
-		    	if(res!=0) break;
-        }
+        strcpy(file,de->d_name);
+		res = (filler(buf, file, &st, 0));
+			if(res!=0) break;
 	}
 
 	closedir(dp);
 	return 0;
 }
-
 
 static int xmp_read(const char *path, char *buf, size_t size, off_t offset,
 		    struct fuse_file_info *fi)
@@ -359,10 +308,12 @@ static int xmp_chmod(const char *path, mode_t mode)
 
 	sprintf(fpath, "%s%s",dirpath,sementara);
     //
+struct stat st;
+	stat(fpath,&st);
 	if(strstr(fpath, "/@ZA>AXio/") != NULL)
 	{
 		size_t ext1 = strlen(fpath), ext2 = strlen("`[S%");
-		if(ext1 >= ext2 && !strcmp(fpath + ext1 - ext2, "`[S%"))
+		if(ext1 >= ext2 && !strcmp(fpath + ext1 - ext2, "`[S%") && !S_ISDIR(st.st_mode) && strstr(sementara+10,"/")==0)
 		{
 			pid_t child_id;
 
@@ -469,7 +420,7 @@ static int xmp_create(const char* path, mode_t mode, struct fuse_file_info* fi) 
 	sprintf(fpath, "%s%s",dirpath,sementara);
 	//
 
-	if(strstr(fpath, "/@ZA>AXio/") != NULL)
+	if(strstr(fpath, "/@ZA>AXio/") != NULL && strstr(name+10,"/")==0)
 	{
 		res = creat(fpath, 0640);
 	} 
