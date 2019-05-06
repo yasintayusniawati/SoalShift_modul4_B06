@@ -104,4 +104,19 @@ execv("/usr/bin/zenity", argv);
 Ketika mengedit suatu file dan melakukan save, maka akan terbuat folder baru bernama Backup kemudian hasil dari save tersebut akan disimpan pada backup dengan nama namafile_[timestamp].ekstensi. Dan ketika file asli dihapus, maka akan dibuat folder bernama RecycleBin, kemudian file yang dihapus beserta semua backup dari file yang dihapus tersebut (jika ada) di zip dengan nama namafile_deleted_[timestamp].zip dan ditaruh ke dalam folder RecycleBin (file asli dan backup terhapus). Dengan format [timestamp] adalah yyyy-MM-dd_HH:mm:ss
 
 ### Jawaban :
+Terdiri dari 2 bagian yaitu write dan unlink :
 
+**Fungsi write**
+Digunakan saat mengedit file 
+
++ Ketika mengedit suatu file dan melakukan save, maka akan terbuat folder baru bernama Backup dengan permission 0755
++ Simpan hasil perubahan ke folder backup dengan fromat namafile_[timestamp].ekstensi
++ 
+
+**Fungsi Unlink**
+Digunakan saat mengapus file
+
++ Saat ingin menghapus file, buat folder baru bernama Recyclebin dengan permission 0775
++ File yang dihapus beserta semua backup dari file yang dihapus tersebut  di zip dengan format namafile_deleted_[timestamp].zip
++ Masukkan ke dalam folder Recyclebin
++ Haspus file tersebut
