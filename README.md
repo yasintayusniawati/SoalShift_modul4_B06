@@ -44,6 +44,11 @@ Untuk mempermudah kalian, dipastikan hanya video file saja yang terpecah menjadi
 </ol>
 
 ### Jawaban :
++ Buat folder Videos yang nantinya akan digunakan untuk menyimpan video yang telah di join. Permission dari folder Videos adalah 0755.
++ Tiap file pada root file system akan dicek apakah dia memiliki ekstensi .mp4 dan merupakan partisi video atau tidak.
++ Lakukan pengecekan pada folder Videos apakah terdapat file video dengan nama yang sama seperti file yang di cek atau tidak. Dalam kodingan kelompok kami menggunakan mode fopen a+ sehingga jika terdapat video dengan nama yang dimaksud maka akan dilakukan append, sedangkan jika tidak terdapat file dengan nama yang dimaksud, maka akan dibuat file dengan nama yang sama.
++ file yang akan dibuka dicek dengan mode read
++ Menyalin isi dari file yang di cek ke file hasil join yang ada pada folder Videos. Proses tersebut dilakukan sampai seluruh isi folder telah di cek seluruhnya.
 
 ## No 3
 Sebelum diterapkannya file system ini, Atta pernah diserang oleh hacker LAPTOP_RUSAK yang menanamkan user bernama “chipset” dan “ic_controller” serta group “rusak” yang tidak bisa dihapus. Karena paranoid, Atta menerapkan aturan pada file system ini untuk menghapus “file bahaya” yang memiliki spesifikasi:
